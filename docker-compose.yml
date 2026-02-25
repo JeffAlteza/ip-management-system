@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # GATEWAY — the only public-facing service
+  # ============================================
+  gateway:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Gateway
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - SESSION_DRIVER=array
+      - CACHE_STORE=array
+      - QUEUE_CONNECTION=sync
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - IP_SERVICE_URL=http://ip-service:8002
+      - INTERNAL_SERVICE_KEY=ip-management-system-secret-key
+    depends_on:
+      - auth-service
+      - ip-service
+    networks:
+      - ipam-network
+
+  # ============================================
+  # AUTH SERVICE — internal only
+  # ============================================
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    expose:
+      - "8001"
+    environment:
+      - APP_NAME=AuthService
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=auth-db
+      - DB_PORT=3306
+      - DB_DATABASE=auth_db
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+      - SESSION_DRIVER=file
+      - CACHE_STORE=file
+      - QUEUE_CONNECTION=sync
+      - INTERNAL_SERVICE_KEY=ip-management-system-secret-key
+      - JWT_SECRET=your-jwt-secret-key-change-this
+    depends_on:
+      - auth-db
+    networks:
+      - ipam-network
+
+  # ============================================
+  # IP MANAGEMENT SERVICE — internal only
+  # ============================================
+  ip-service:
+    build:
+      context: ./ip-management-service
+      dockerfile: Dockerfile
+    expose:
+      - "8002"
+    environment:
+      - APP_NAME=IpService
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=ip-db
+      - DB_PORT=3306
+      - DB_DATABASE=ip_db
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+      - SESSION_DRIVER=file
+      - CACHE_STORE=file
+      - QUEUE_CONNECTION=sync
+      - INTERNAL_SERVICE_KEY=ip-management-system-secret-key
+    depends_on:
+      - ip-db
+    networks:
+      - ipam-network
+
+  # ============================================
+  # DATABASES
+  # ============================================
+  auth-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: auth_db
+    volumes:
+      - auth-db-data:/var/lib/mysql
+    ports:
+      - "33061:3306"
+    networks:
+      - ipam-network
+
+  ip-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: ip_db
+    volumes:
+      - ip-db-data:/var/lib/mysql
+    ports:
+      - "33062:3306"
+    networks:
+      - ipam-network
+
+# ============================================
+# NETWORK — internal communication
+# ============================================
+networks:
+  ipam-network:
+    driver: bridge
+
+# ============================================
+# VOLUMES — persistent database storage
+# ============================================
+volumes:
+  auth-db-data:
+  ip-db-data:
