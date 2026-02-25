@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ============================================
   # GATEWAY — the only public-facing service
