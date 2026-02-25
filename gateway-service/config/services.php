@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'auth' => [
+        'url' => env('AUTH_SERVICE_URL'),
+    ],
+
+    'ip' => [
+        'url' => env('IP_SERVICE_URL'),
+    ],
+
+    'internal_key' => env('INTERNAL_SERVICE_KEY'),
+
 ];
