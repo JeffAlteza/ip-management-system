@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\LoginDTO;
+use App\DTOs\RegisterDTO;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
@@ -15,20 +17,26 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $result = $this->authService->login($request->validated());
+        $result = $this->authService
+            ->login(
+                LoginDTO::from($request->validated())
+            );
 
         if (! $result) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        return response()->json($result);
+        return response()->json($result->toArray());
     }
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->authService->register($request->validated());
+        $result = $this->authService
+            ->register(
+                RegisterDTO::from($request->validated())
+            );
 
-        return response()->json($result, 201);
+        return response()->json($result->toArray(), 201);
     }
 
     public function validateToken(): JsonResponse
@@ -42,7 +50,7 @@ class AuthController extends Controller
     {
         $result = $this->authService->refresh();
 
-        return response()->json($result);
+        return response()->json($result->toArray());
     }
 
     public function logout(): JsonResponse

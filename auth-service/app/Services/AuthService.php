@@ -2,35 +2,38 @@
 
 namespace App\Services;
 
+use App\DTOs\LoginDTO;
+use App\DTOs\RegisterDTO;
+use App\DTOs\TokenDTO;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
-    public function login(array $credentials): ?array
+    public function login(LoginDTO $loginDTO): ?TokenDTO
     {
-        $token = Auth::attempt($credentials);
+        $token = Auth::attempt($loginDTO->toArray());
 
         if (! $token) {
             return null;
         }
 
-        return $this->respondWithToken($token);
+        return $this->buildTokenDTO($token);
     }
 
-    public function register(array $data): array
+    public function register(RegisterDTO $registerDTO): TokenDTO
     {
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role' => $data['role'] ?? 'user',
+            'name' => $registerDTO->name,
+            'email' => $registerDTO->email,
+            'password' => Hash::make($registerDTO->password),
+            'role' => $registerDTO->role,
         ]);
 
         $token = Auth::login($user);
 
-        return $this->respondWithToken($token);
+        return $this->buildTokenDTO($token);
     }
 
     public function validateToken(): array
@@ -47,11 +50,11 @@ class AuthService
         ];
     }
 
-    public function refresh(): array
+    public function refresh(): TokenDTO
     {
         $token = Auth::refresh();
 
-        return $this->respondWithToken($token);
+        return $this->buildTokenDTO($token);
     }
 
     public function logout(): void
@@ -59,22 +62,22 @@ class AuthService
         Auth::logout();
     }
 
-    protected function respondWithToken(string $token): array
+    protected function buildTokenDTO(string $token): TokenDTO
     {
         $user = Auth::user();
         $payload = Auth::payload();
 
-        return [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60,
-            'session_id' => $payload->get('session_id'),
-            'user' => [
+        return new TokenDTO(
+            accessToken: $token,
+            tokenType: 'bearer',
+            expiresIn: Auth::factory()->getTTL() * 60,
+            sessionId: $payload->get('session_id'),
+            user: [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
             ],
-        ];
+        );
     }
 }
