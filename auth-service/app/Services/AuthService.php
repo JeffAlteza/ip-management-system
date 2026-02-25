@@ -33,6 +33,10 @@ class AuthService
 
         $token = Auth::login($user);
 
+        if (! $token) {
+            throw new \Exception('Unable to create token for user.');
+        }
+
         return $this->buildTokenDTO($token);
     }
 
