@@ -17,46 +17,42 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $result = $this->authService
-            ->login(
-                LoginDTO::from($request->validated())
-            );
+        $result = $this->authService->login(
+            LoginDTO::from($request->validated()),
+        );
 
         if (! $result) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return $this->error('Invalid credentials', 401);
         }
 
-        return response()->json($result->toArray());
+        return $this->success($result->toArray());
     }
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->authService
-            ->register(
-                RegisterDTO::from($request->validated())
-            );
+        $result = $this->authService->register(
+            RegisterDTO::from($request->validated()),
+        );
 
-        return response()->json($result->toArray(), 201);
+        return $this->success($result->toArray(), 201);
     }
 
     public function validateToken(): JsonResponse
     {
-        $result = $this->authService->validateToken();
-
-        return response()->json($result);
+        return $this->success($this->authService->validateToken());
     }
 
     public function refresh(): JsonResponse
     {
         $result = $this->authService->refresh();
 
-        return response()->json($result->toArray());
+        return $this->success($result->toArray());
     }
 
     public function logout(): JsonResponse
     {
         $this->authService->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return $this->success(message: 'Successfully logged out');
     }
 }
