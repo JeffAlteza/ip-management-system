@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,14 +19,14 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => 'user',
+            'role' => Role::User,
         ];
     }
 
     public function superAdmin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => 'super_admin',
+            'role' => Role::SuperAdmin,
         ]);
     }
 }
