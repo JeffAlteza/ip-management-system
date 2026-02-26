@@ -20,6 +20,16 @@ class AuditLog extends Model
         'ip_address_value',
     ];
 
+    public function scopeDateFrom($query, string $date)
+    {
+        return $query->where('created_at', '>=', $date);
+    }
+
+    public function scopeDateTo($query, string $date)
+    {
+        return $query->where('created_at', '<=', $date);
+    }
+
     protected function casts(): array
     {
         return [
