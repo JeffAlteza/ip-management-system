@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AuditLog extends Model
 {
-    public $timestamps = false;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -17,7 +18,6 @@ class AuditLog extends Model
         'new_values',
         'session_id',
         'ip_address_value',
-        'created_at',
     ];
 
     protected function casts(): array
@@ -27,5 +27,14 @@ class AuditLog extends Model
             'new_values' => 'array',
             'created_at' => 'datetime',
         ];
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::deleting(function () {
+            throw new \RuntimeException('Audit logs cannot be deleted.');
+        });
     }
 }
