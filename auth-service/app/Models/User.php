@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Str;
@@ -27,6 +28,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [
             'password' => 'hashed',
+            'role' => Role::class,
         ];
     }
 

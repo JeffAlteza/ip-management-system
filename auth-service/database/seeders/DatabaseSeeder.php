@@ -2,21 +2,31 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->superAdmin()->create([
-            'name' => 'Super Admin',
-            'email' => 'super_admin@example.com',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'super_admin@example.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'role' => Role::SuperAdmin,
+            ],
+        );
 
-        User::factory()->create([
-            'name' => 'Regular User',
-            'email' => 'user@example.com',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'user@example.com'],
+            [
+                'name' => 'Regular User',
+                'password' => Hash::make('password'),
+                'role' => Role::User,
+            ],
+        );
     }
 }
