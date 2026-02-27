@@ -17,6 +17,7 @@ class UpdateIpRequest extends FormRequest
         return [
             'ip_address' => ['sometimes', 'ip', Rule::unique('ips', 'ip_address')->ignore($this->route('ip'))],
             'label' => ['sometimes', 'string', 'max:255'],
+            'comment' => ['sometimes', 'nullable', 'string', 'max:1000'],
         ];
     }
 }
