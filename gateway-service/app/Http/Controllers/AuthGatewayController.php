@@ -22,12 +22,13 @@ class AuthGatewayController extends Controller
         );
 
         if ($result['status'] === 200) {
+            $data = $result['data']['data'];
             $this->ipService->logAuditEvent([
-                'user_id' => $result['data']['user']['id'],
+                'user_id' => $data['user']['id'],
                 'action' => 'user_login',
                 'entity_type' => 'user',
-                'entity_id' => $result['data']['user']['id'],
-                'session_id' => $result['data']['session_id'],
+                'entity_id' => $data['user']['id'],
+                'session_id' => $data['sessionId'],
             ]);
         }
 
