@@ -10,5 +10,6 @@ class UpdateIpDTO extends Data
     public function __construct(
         public string|Optional $ip_address,
         public string|Optional $label,
+        public string|null|Optional $comment,
     ) {}
 }
