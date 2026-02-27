@@ -27,7 +27,7 @@ class AuthenticateToken
             return response()->json(['message' => 'Unauthenticated'], 401);
         }
 
-        $user = $result['data'];
+        $user = $result['data']['data'];
 
         $request->merge([
             'auth_user_id' => $user['id'],
