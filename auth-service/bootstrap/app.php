@@ -23,8 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (ValidationException $e, Request $request) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $e->errors(),
+                'message' => collect($e->errors())->flatten()->first(),
             ], 422);
         });
 
