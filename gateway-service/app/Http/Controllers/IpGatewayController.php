@@ -22,7 +22,7 @@ class IpGatewayController extends Controller
     public function store(Request $request): JsonResponse
     {
         $result = $this->ipService->create(
-            $request->only('ip_address', 'label'),
+            $request->only('ip_address', 'label', 'comment'),
             $this->userContext($request),
         );
 
@@ -33,7 +33,7 @@ class IpGatewayController extends Controller
     {
         $result = $this->ipService->update(
             $id,
-            $request->only('ip_address', 'label'),
+            $request->only('ip_address', 'label', 'comment'),
             $this->userContext($request),
         );
 
