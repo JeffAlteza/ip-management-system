@@ -19,7 +19,7 @@ class IpController extends Controller
 
     public function index(): JsonResponse
     {
-        return response()->json($this->ipService->list());
+        return $this->success($this->ipService->list());
     }
 
     public function store(StoreIpRequest $request): JsonResponse
@@ -29,7 +29,7 @@ class IpController extends Controller
             $request,
         );
 
-        return response()->json($result['data'], $result['status']);
+        return $this->success($result['data'], $result['status']);
     }
 
     public function update(UpdateIpRequest $request, Ip $ip): JsonResponse
@@ -41,10 +41,10 @@ class IpController extends Controller
         );
 
         if (isset($result['error'])) {
-            return response()->json(['message' => $result['error']], $result['status']);
+            return $this->error($result['error'], $result['status']);
         }
 
-        return response()->json($result['data'], $result['status']);
+        return $this->success($result['data']);
     }
 
     public function destroy(Request $request, Ip $ip): JsonResponse
@@ -52,9 +52,9 @@ class IpController extends Controller
         $result = $this->ipService->delete($ip, $request);
 
         if (isset($result['error'])) {
-            return response()->json(['message' => $result['error']], $result['status']);
+            return $this->error($result['error'], $result['status']);
         }
 
-        return response()->json(['message' => 'IP deleted'], $result['status']);
+        return $this->success(message: 'IP deleted');
     }
 }

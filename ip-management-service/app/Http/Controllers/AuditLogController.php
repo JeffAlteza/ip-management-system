@@ -18,10 +18,10 @@ class AuditLogController extends Controller
         $result = $this->auditLogService->getLogs($request);
 
         if (isset($result['error'])) {
-            return response()->json(['message' => $result['error']], $result['status']);
+            return $this->error($result['error'], $result['status']);
         }
 
-        return response()->json($result['data'], $result['status']);
+        return $this->success($result['data']);
     }
 
     public function store(Request $request): JsonResponse
@@ -30,6 +30,6 @@ class AuditLogController extends Controller
             AuditLogDTO::from($request->all()),
         );
 
-        return response()->json($log, 201);
+        return $this->success($log, 201);
     }
 }
