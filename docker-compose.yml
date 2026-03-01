@@ -1,5 +1,19 @@
 services:
   # ============================================
+  # FRONTEND — NextJS app
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - gateway
+    networks:
+      - ipam-network
+
+  # ============================================
   # GATEWAY — the only public-facing service
   # ============================================
   gateway:
