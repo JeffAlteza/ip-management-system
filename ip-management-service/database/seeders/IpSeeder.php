@@ -9,6 +9,6 @@ class IpSeeder extends Seeder
 {
     public function run(): void
     {
-        Ip::factory(100)->create();
+        Ip::factory(10)->create();
     }
 }
