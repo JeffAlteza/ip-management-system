@@ -11,7 +11,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/dashboard", label: "Dashboard" },
+    { href: "/ip-management", label: "IP Management" },
     ...(user?.role === "super_admin"
       ? [{ href: "/audit-logs", label: "Audit Logs" }]
       : []),
@@ -21,7 +21,7 @@ export function Navbar() {
     <header className="border-b bg-white dark:bg-zinc-950">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="text-lg font-semibold">
+          <Link href="/ip-management" className="text-lg font-semibold">
             IPAM
           </Link>
           <nav className="flex items-center gap-1">

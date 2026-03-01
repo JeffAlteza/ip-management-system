@@ -35,13 +35,12 @@ export default function AuditLogsPage() {
   const [loading, setLoading] = useState(true);
   const [action, setAction] = useState("all");
   const [userId, setUserId] = useState("");
-  const [sessionId, setSessionId] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
 
   useEffect(() => {
     if (user && user.role !== "super_admin") {
-      router.replace("/dashboard");
+      router.replace("/ip-management");
     }
   }, [user, router]);
 
@@ -51,7 +50,6 @@ export default function AuditLogsPage() {
       const params = new URLSearchParams();
       if (action !== "all") params.set("filter[action]", action);
       if (userId) params.set("filter[user_id]", userId);
-      if (sessionId) params.set("filter[session_id]", sessionId);
       if (dateFrom) params.set("filter[date_from]", dateFrom);
       if (dateTo) params.set("filter[date_to]", dateTo);
 
@@ -68,7 +66,7 @@ export default function AuditLogsPage() {
     } finally {
       setLoading(false);
     }
-  }, [action, userId, sessionId, dateFrom, dateTo]);
+  }, [action, userId, dateFrom, dateTo]);
 
   useEffect(() => {
     if (user?.role === "super_admin") {
@@ -105,15 +103,6 @@ export default function AuditLogsPage() {
             placeholder="e.g. 1"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>Session ID</Label>
-          <Input
-            className="w-[200px]"
-            placeholder="e.g. abc123..."
-            value={sessionId}
-            onChange={(e) => setSessionId(e.target.value)}
           />
         </div>
         <div className="space-y-1">

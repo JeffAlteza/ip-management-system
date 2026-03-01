@@ -43,7 +43,7 @@ export default function RegisterPage() {
         password_confirmation: passwordConfirmation,
       });
       toast.success("Account created successfully");
-      router.push("/dashboard");
+      router.push("/ip-management");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Registration failed");
     } finally {
