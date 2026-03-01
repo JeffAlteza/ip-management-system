@@ -8,7 +8,7 @@ import { IpFormDialog } from "@/components/ip-form-dialog";
 import { toast } from "sonner";
 import type { Ip, ApiResponse, PaginatedData } from "@/types";
 
-export default function DashboardPage() {
+export default function IpManagementPage() {
   const [ips, setIps] = useState<Ip[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
