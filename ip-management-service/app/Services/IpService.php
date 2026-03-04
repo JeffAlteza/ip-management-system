@@ -19,7 +19,7 @@ class IpService
 
     public function list()
     {
-        return $this->queryBuilder->build();
+        return $this->queryBuilder->build()->paginate(100);
     }
 
     public function create(StoreIpDTO $dto, Request $request): array
